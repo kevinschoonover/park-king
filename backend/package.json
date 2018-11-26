@@ -1,0 +1,30 @@
+{
+   "name": "park-king",
+   "version": "1.0.0",
+   "description": "Web API for time based parking system",
+   "main": "src/app.js",
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/kevinschoonover/park-king.git"
+   },
+   "scripts": {
+      "start:dev": "NODE_ENV='development' nodemon --watch 'src/**/*' ./src/app.js",
+      "start:prod": "NODE_ENV='production' node build/app.js"
+   },
+   "author": "sigdotcom <acm@mst.edu>",
+   "license": "MPL-2.0",
+   "dependencies": {
+      "@koa/cors": "^2.2.2",
+      "koa": "^2.5.0",
+      "koa-bodyparser": "^4.2.0",
+      "koa-logger": "^3.2.0",
+      "koa-passport": "^4.0.1",
+      "koa-router": "^7.4.0",
+      "koa-session": "^5.8.1",
+      "passport-local": "^1.0.0",
+      "pg": "^7.4.1"
+   },
+   "devDependencies": {
+      "nodemon": "^1.18.6"
+   }
+}
