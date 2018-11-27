@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
-import VehicleEntry from './VehicleEntry';
+import VehicleCard from './VehicleCard';
 
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -35,11 +35,11 @@ class Vehicle extends React.Component {
         </Typography>
 
         <Grid container spacing={32}>
-          <VehicleEntry />
-          <VehicleEntry />
-          <VehicleEntry />
-          <VehicleEntry />
-          <VehicleEntry />
+          <VehicleCard />
+          <VehicleCard />
+          <VehicleCard />
+          <VehicleCard />
+          <VehicleCard />
         </Grid>
         <Fab color="primary" aria-label="Add" className={classes.fab}>
           <AddIcon />

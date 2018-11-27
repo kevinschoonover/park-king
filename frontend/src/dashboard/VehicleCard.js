@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import purple from '@material-ui/core/colors/purple';
 
@@ -20,7 +19,7 @@ const styles = {
 };
 
 
-const VehicleEntry = (props) => {
+const VehicleCard = (props) => {
   const { classes } = props
 
   return (
@@ -42,4 +41,4 @@ const VehicleEntry = (props) => {
   );
 }
 
-export default withStyles(styles)(VehicleEntry);
+export default withStyles(styles)(VehicleCard);

@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from "@material-ui/core/Grid";
+import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import orange from '@material-ui/core/colors/orange';
 
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -16,20 +19,30 @@ const styles = theme => ({
   },
   subheading: {
     fontWeight: 'lighter',
-    fontSize: '24px',
+    fontSize: '28px',
   },
   date: {
     fontSize: '24px',
-  }
+  },
 });
 
 
-const TicketEntry = (props) => {
+const VehiclePaper = (props) => {
   const { classes } = props
+  const colors = [
+    red[500],
+    orange[500],
+    green[500],
+  ]
+
+  let div_color = undefined;
+  if (props.color) {
+    div_color = colors[Math.floor(Math.random()*colors.length)];
+  }
 
   return (
     <Grid item xs={12}>
-      <Paper className={classes.container}>
+      <Paper className={classes.container} style={{backgroundColor: div_color}}>
         <Grid container direction="row" spacing={16}>
           <Grid item container xs={2} alignItems="center" justify="center">
             <Typography variant="h4">
@@ -60,4 +73,4 @@ const TicketEntry = (props) => {
   );
 }
 
-export default withStyles(styles)(TicketEntry);
+export default withStyles(styles)(VehiclePaper);

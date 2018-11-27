@@ -21,6 +21,7 @@ import { styles } from './styles';
 import MainListItems from './listItems';
 import Ticket from './Ticket';
 import Vehicle from './Vehicle';
+import Reservation from './Reservation';
 
 const TICKET_MENU = "ticket"
 const VEHICLE_MENU = "vehicle"
@@ -62,6 +63,7 @@ class Dashboard extends React.Component {
     } else if (menu === VEHICLE_MENU) {
       main_menu = <Vehicle />
     } else if (menu === RESERVATION_MENU) {
+      main_menu = <Reservation />
     }
 
     return (

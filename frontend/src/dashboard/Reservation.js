@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from '@material-ui/icons/Add';
 
 import VehiclePaper from './VehiclePaper';
 
@@ -12,9 +14,15 @@ const styles = theme => ({
   tableContainer: {
     height: '100%',
   },
+  fab: {
+    margin: theme.spacing.unit,
+    position: 'absolute',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+  },
 });
 
-class Ticket extends React.Component {
+class Reservation extends React.Component {
 
   render() {
     const { classes } = this.props
@@ -23,23 +31,26 @@ class Ticket extends React.Component {
       <div>
         <div className={classes.appBarSpacer} />
         <Typography variant="h3" gutterBottom component="h2">
-          Tickets
+          Reservations
         </Typography>
 
         <Grid container spacing={16}>
-          <VehiclePaper />
-          <VehiclePaper />
-          <VehiclePaper />
-          <VehiclePaper />
-          <VehiclePaper />
+          <VehiclePaper color />
+          <VehiclePaper color />
+          <VehiclePaper color />
+          <VehiclePaper color />
+          <VehiclePaper color />
         </Grid>
+        <Fab color="primary" aria-label="Add" className={classes.fab}>
+          <AddIcon />
+        </Fab>
       </div>
     )
   }
 }
 
-Ticket.propTypes = {
+Reservation.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Ticket);
+export default withStyles(styles)(Reservation);
