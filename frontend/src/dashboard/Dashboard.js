@@ -20,6 +20,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { styles } from './styles';
 import MainListItems from './listItems';
 import Ticket from './Ticket';
+import Vehicle from './Vehicle';
 
 const TICKET_MENU = "ticket"
 const VEHICLE_MENU = "vehicle"
@@ -28,7 +29,7 @@ const RESERVATION_MENU = "reservation"
 class Dashboard extends React.Component {
   state = {
     open: true,
-    menu: TICKET_MENU,
+    menu: VEHICLE_MENU,
   };
 
   handleDrawerOpen = () => {
@@ -59,6 +60,7 @@ class Dashboard extends React.Component {
     if (menu === TICKET_MENU) {
       main_menu = <Ticket />
     } else if (menu === VEHICLE_MENU) {
+      main_menu = <Vehicle />
     } else if (menu === RESERVATION_MENU) {
     }
 
