@@ -18,7 +18,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import { styles } from './styles';
-import { mainListItems } from './listItems';
+import MainListItems from './listItems';
 import Ticket from './Ticket';
 
 const TICKET_MENU = "ticket"
@@ -39,6 +39,18 @@ class Dashboard extends React.Component {
     this.setState({ open: false });
   };
 
+  setTicketMenu = () => {
+    this.setState({ menu: TICKET_MENU });
+  };
+
+  setVehicleMenu = () => {
+    this.setState({ menu: VEHICLE_MENU });
+  };
+
+  setReservationMenu = () => {
+    this.setState({ menu: RESERVATION_MENU });
+  };
+
   render() {
     const { classes } = this.props;
     const menu = this.state.menu;
@@ -46,8 +58,8 @@ class Dashboard extends React.Component {
 
     if (menu === TICKET_MENU) {
       main_menu = <Ticket />
-    } else if (menu == VEHICLE_MENU) {
-    } else if (menu == RESERVATION_MENU) {
+    } else if (menu === VEHICLE_MENU) {
+    } else if (menu === RESERVATION_MENU) {
     }
 
     return (
@@ -98,7 +110,11 @@ class Dashboard extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>
+            <MainListItems onTicket={() => this.setTicketMenu()}
+                           onVehicle={() => this.setVehicleMenu()}
+                           onReservation={() => this.setReservationMenu()} />
+          </List>
           <Divider />
         </Drawer>
         <main className={classes.content}>
