@@ -23,7 +23,6 @@ const styles = theme => ({
 });
 
 class Vehicle extends React.Component {
-
   render() {
     const { classes } = this.props
 
@@ -41,7 +40,8 @@ class Vehicle extends React.Component {
           <VehicleCard />
           <VehicleCard />
         </Grid>
-        <Fab color="primary" aria-label="Add" className={classes.fab}>
+        <Fab color="primary" aria-label="Add" className={classes.fab}
+             onClick={ () => this.props.onForm()}>
           <AddIcon />
         </Fab>
       </div>

@@ -41,7 +41,12 @@ class Reservation extends React.Component {
           <VehiclePaper color />
           <VehiclePaper color />
         </Grid>
-        <Fab color="primary" aria-label="Add" className={classes.fab}>
+        <Fab
+          color="primary"
+          aria-label="Add"
+          className={classes.fab}
+          onClick={() => this.props.onForm()}
+        >
           <AddIcon />
         </Fab>
       </div>
