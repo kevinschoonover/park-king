@@ -23,6 +23,62 @@ const styles = theme => ({
 });
 
 class Vehicle extends React.Component {
+  state = {vehicles: []};
+
+  componentDidMount() {
+    //axios.get("")
+    //  .then(res => {
+    //    const vehicles = res.data;
+    //    this.setState({ vehicles });
+    //  })
+    const vehicles = [
+      {
+        id: 1,
+        state: "TX",
+        license: "123456",
+        make: "Tesla",
+        model: "3",
+        year: "2018"
+      },
+      {
+        id: 1,
+        state: "TX",
+        license: "123456",
+        make: "Tesla",
+        model: "3",
+        year: "2018"
+      },
+      {
+        id: 1,
+        state: "TX",
+        license: "123456",
+        make: "Tesla",
+        model: "3",
+        year: "2018"
+      }
+    ]
+    this.setState({vehicles});
+  }
+
+
+  renderVehicles() {
+    const vehicle_state = this.state.vehicles
+    let vehicles = []
+    for (var i=0; i < vehicle_state.length; i++) {
+      const vehicle = vehicle_state[i]
+      vehicles.push(
+        <VehicleCard
+          key={i}
+          make={vehicle.make}
+          model={vehicle.model}
+          license={vehicle.license}
+        />
+      )
+    }
+
+    return vehicles
+  }
+
   render() {
     const { classes } = this.props
 
@@ -34,11 +90,7 @@ class Vehicle extends React.Component {
         </Typography>
 
         <Grid container spacing={32}>
-          <VehicleCard />
-          <VehicleCard />
-          <VehicleCard />
-          <VehicleCard />
-          <VehicleCard />
+          {this.renderVehicles()}
         </Grid>
         <Fab color="primary" aria-label="Add" className={classes.fab}
              onClick={ () => this.props.onForm()}>

@@ -5,6 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Send from "@material-ui/icons/Send";
 
@@ -29,6 +34,14 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
+  formControl: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2,
+  }
 });
 
 class VehicleForm extends React.Component {
@@ -38,6 +51,7 @@ class VehicleForm extends React.Component {
     year: '2018',
     state: 'Texas',
     license: 'tesla3',
+    vehicle_type: undefined,
   };
 
   handleChange = name => event => {
@@ -105,6 +119,29 @@ class VehicleForm extends React.Component {
                 margin="normal"
               />
             </Grid>
+            <Grid item>
+              <FormControl className={classes.formControl} margin="normal">
+                <InputLabel shrink htmlFor="lot-label">
+                  Vehicle Type
+                </InputLabel>
+                <Select
+                  value={this.state.vehicle_type}
+                  onChange={this.handleChange('vehicle_type')}
+                  input={<Input name="vehicle_type" id="vehicle-type-label" />}
+                  displayEmpty
+                  name="vehicle_type"
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
             <Grid item>
               <Button
                 variant="contained"

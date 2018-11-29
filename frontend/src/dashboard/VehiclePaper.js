@@ -46,25 +46,25 @@ const VehiclePaper = (props) => {
         <Grid container direction="row" spacing={16}>
           <Grid item container xs={2} alignItems="center" justify="center">
             <Typography variant="h4">
-              Tesla 3
+              {props.make} {props.model}
             </Typography>
           </Grid>
           <Grid item container xs={2} alignItems="center" justify="center">
             <Typography className={classes.subheading} variant="subheading">
-              FK8432
+              {props.license}
             </Typography>
           </Grid>
           <Grid item container xs={6} alignItems="center" justify="center" direction="column">
             <Typography className={classes.date} variant="body1">
-              October 16th, 2018
+              {props.time}
             </Typography>
             <Typography className={classes.date} variant="body1">
-              16:40
+              16:40 (TODO)
             </Typography>
           </Grid>
           <Grid item container xs={2} alignItems="center" justify="center">
             <Typography variant="h4">
-              Lot A
+              Lot {props.lot}
             </Typography>
           </Grid>
         </Grid>

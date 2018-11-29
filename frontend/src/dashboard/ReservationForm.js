@@ -3,8 +3,13 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Send from "@material-ui/icons/Send";
 
@@ -34,12 +39,22 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
+  formControl: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
 class ReservationForm extends React.Component {
   state = {
     startDate: new Date('2018-01-01T18:54'),
     endDate: new Date('2018-01-01T18:54'),
+    lot: "Lot A",
+    vehicle: "Tesla 3"
   };
 
   handleChange = name => event => {
@@ -89,22 +104,46 @@ class ReservationForm extends React.Component {
               />
             </Grid>
             <Grid item>
-              <TextField
-                id="state"
-                label="State"
-                className={classes.textField}
-                value={this.state.state}
-                onChange={this.handleChange('state')}
-                margin="normal"
-              />
-              <TextField
-                id="license"
-                label="License"
-                className={classes.textField}
-                value={this.state.license}
-                onChange={this.handleChange('license')}
-                margin="normal"
-              />
+              <FormControl className={classes.formControl} margin="normal">
+                <InputLabel shrink htmlFor="lot-label">
+                  Lot
+                </InputLabel>
+                <Select
+                  value={this.state.lot}
+                  onChange={this.handleChange('lot')}
+                  input={<Input name="lot" id="lot-label" />}
+                  displayEmpty
+                  name="lot"
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl className={classes.formControl} margin="normal">
+                <InputLabel shrink htmlFor="vehicle-label">
+                  Vehicle
+                </InputLabel>
+                <Select
+                  value={this.state.vehicle}
+                  onChange={this.handleChange('vehicle')}
+                  input={<Input name="vehicle" id="vehicle-label" />}
+                  displayEmpty
+                  name="vehicle"
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item>
               <Button

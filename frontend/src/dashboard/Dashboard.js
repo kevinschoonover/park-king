@@ -91,6 +91,8 @@ class Dashboard extends React.Component {
       case VEHICLE_FORM:
         main_menu = <VehicleForm onSubmit={() => this.setVehicleMenu()}/>
         break;
+      default:
+        break;
     }
 
     return (

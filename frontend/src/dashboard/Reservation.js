@@ -23,6 +23,53 @@ const styles = theme => ({
 });
 
 class Reservation extends React.Component {
+  state = {
+    reservations: [],
+  }
+
+  componentDidMount() {
+    const reservations = [
+      {
+        vehicle_id: 1,
+        lot_id: 1,
+        start_time: "October 25th 2018",
+        end_time: "October 26th 2018",
+        vehicle: {
+          state: "TX",
+          license: "123456",
+          make: "Tesla",
+          model: "3",
+          year: "2018",
+        },
+        lot: {
+          name: "A"
+        }
+      },
+    ]
+
+    this.setState({reservations})
+  }
+
+  renderReservations() {
+    let reservations = []
+    for(let i=0; i < this.state.reservations.length; i++) {
+      const reservation = this.state.reservations[i]
+      reservations.push(
+        <VehiclePaper
+          color
+          key={i}
+          make={reservation.vehicle.make}
+          model={reservation.vehicle.model}
+          year={reservation.vehicle.year}
+          lot={reservation.lot.name}
+          license={reservation.vehicle.license}
+          time={reservation.start_time}
+        />
+      )
+    }
+
+    return reservations
+  }
 
   render() {
     const { classes } = this.props
@@ -35,11 +82,7 @@ class Reservation extends React.Component {
         </Typography>
 
         <Grid container spacing={16}>
-          <VehiclePaper color />
-          <VehiclePaper color />
-          <VehiclePaper color />
-          <VehiclePaper color />
-          <VehiclePaper color />
+          {this.renderReservations()}
         </Grid>
         <Fab
           color="primary"

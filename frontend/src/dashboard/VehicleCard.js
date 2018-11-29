@@ -30,10 +30,10 @@ const VehicleCard = (props) => {
         />
 				<CardContent>
           <Typography gutterBottom variant="h4" component="h2" align="center">
-						Tesla 3
+            {props.make} {props.model}
           </Typography>
           <Typography gutterBottom style={{fontWeight: 'lighter'}} variant="h5" align="center">
-						ABCDEF
+            {props.license}
           </Typography>
         </CardContent>
       </Card>
