@@ -1,8 +1,0 @@
-# Backend
-## Running Application
-
-```
-yarn install
-docker run --name db -e POSTGRES_USER=db -e POSTGRES_DB=db -p 5432:5432 -d postgres
-yarn start:dev
-```
