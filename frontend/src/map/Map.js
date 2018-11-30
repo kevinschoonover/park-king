@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from "react-router-dom";
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -7,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import Fab from '@material-ui/core/Fab';
 
 import { Map, TileLayer, Popup, Polygon } from 'react-leaflet'
 
@@ -20,6 +22,16 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
     zIndex: 1000,
     pointerEvents: "auto",
+  },
+  profile: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    marginRight: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 4,
+    zIndex: 1000,
+    pointerEvents: "auto",
+    fontSize: 26,
   },
   header: {
     marginTop: theme.spacing.unit
@@ -41,8 +53,15 @@ class FullMap extends Component {
     lat: 37.954403,
     lng: -91.774891,
     zoom: 17,
-    lots: []
+    lots: [],
+    show: {},
   }
+
+  handleChange = name => event => {
+    let state_copy = JSON.parse(JSON.stringify(this.state.show))
+    state_copy[name] = event.target.checked
+    this.setState({show: state_copy});
+  };
 
   componentDidMount() {
     const lots = [
@@ -68,7 +87,15 @@ class FullMap extends Component {
       }
     ]
 
+    let show = {};
+    for (let i = 0; i < lots.length; i++) {
+      const lot = lots[i]
+      show[lot.name] = true
+    }
+
     this.setState({lots});
+    this.setState({show});
+
   }
 
   renderPolygons() {
@@ -76,13 +103,16 @@ class FullMap extends Component {
 
     for(let i=0; i < this.state.lots.length; i++) {
       const lot = this.state.lots[i]
-      polygons.push(
-        <Polygon color="purple" positions={lot.location} key={i}>
-          <Popup>
-            Lot {lot.name}
-          </Popup>
-        </Polygon>
-      )
+
+      if (this.state.show[lot.name]) {
+        polygons.push(
+          <Polygon color="purple" positions={lot.location} key={i}>
+            <Popup>
+              Lot {lot.name}
+            </Popup>
+          </Polygon>
+        )
+      }
     }
 
     return polygons
@@ -112,7 +142,9 @@ class FullMap extends Component {
               className={classes.size}
               icon={<CheckBoxOutlineBlankIcon className={classes.sizeIcon} />}
               checkedIcon={<CheckBoxIcon className={classes.sizeIcon} />}
-              value="checkedI"
+              value={lot.name}
+              checked={this.state.show[lot.name]}
+              onChange={this.handleChange(lot.name)}
 						/>
           </Grid>
         </Grid>
@@ -147,6 +179,11 @@ class FullMap extends Component {
     return (
       <div style={{height: "100%", width: "100%"}}>
         {this.renderOverlay()}
+        <Link to="/">
+          <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.profile}>
+            Go To Profile
+          </Fab>
+        </Link>
         <Map center={position} zoom={this.state.zoom}>
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
