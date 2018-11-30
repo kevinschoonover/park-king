@@ -3,6 +3,9 @@ from flask import Flask
 def create_app():
     app = Flask('park-king-backend')
 
+    from backend import database
+    database.init_db(app)
+
     @app.route('/user/')
     def userAll():
       id = "0"
