@@ -1,6 +1,6 @@
 export const auth = {
   isAuthenticated() {
-    return localStorage.getItem('authenticated') == 'true'
+    return localStorage.getItem('authenticated') === 'true'
   },
   authenticate() {
     localStorage.setItem('authenticated', true);

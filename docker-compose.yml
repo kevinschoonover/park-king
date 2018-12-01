@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+    react:
+        build:
+          context: ./frontend
+          dockerfile: Dockerfile
+        volumes:
+          - './frontend/:/usr/src/app'
+          - '/usr/src/app/node_modules'
+        ports:
+          - '3000:3000'
+        environment:
+          - NODE_ENV=development
+    app:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - '5000:5000'
+        command: "gunicorn --bind :8000 wsgi"
+    nginx:
+        image: "nginx"
+        ports:
+            - "8080:80"
+        volumes:
+            - ./conf.d:/etc/nginx/conf.d
+        networks:
+          - web_nw
+        depends_on:
+          - app
+
+networks:
+  web_nw:
+    driver: bridge

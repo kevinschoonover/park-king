@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from "react-router-dom";
 
-
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,6 +14,9 @@ import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+
+import Snackbar from '@material-ui/core/Snackbar';
+
 
 import { auth } from '../auth'
 
@@ -57,8 +59,21 @@ const styles = theme => ({
 class SignIn extends React.Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    open: false,
   }
+
+  handleClick = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
 
   handleChange = name => event => {
     this.setState({
@@ -70,6 +85,7 @@ class SignIn extends React.Component {
     auth.authenticate();
     this.setState({ state: this.state });
   }
+
   onSignUp() {
     auth.authenticate();
     this.setState({ state: this.state });
@@ -88,6 +104,19 @@ class SignIn extends React.Component {
     return (
       <main className={classes.main}>
         <CssBaseline />
+        <Snackbar
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">I love snacks</span>}
+        />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockIcon />
@@ -142,8 +171,7 @@ class SignIn extends React.Component {
               onClick={() => this.onSignUp()}
             >
               Sign Up
-            </Button>
-
+           </Button>
           </form>
         </Paper>
       </main>
