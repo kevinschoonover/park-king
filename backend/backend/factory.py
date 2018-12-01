@@ -1,63 +1,78 @@
 from flask import Flask
 
 from . import database
-db = database.get_db()
 
 
 def create_app():
     app = Flask('park-king-backend')
-
     database.init_db(app)
 
-    @app.route('/user/',method=['GET','POST'])
+    @app.route('/user/',methods=['GET'])
     def userAll():
-      users = db.execute("SELECT  id,email,password from USER;")
-      usersObj = []
-      for user in users:
-        id = user[0]
-        email = user[1]
-        password = user[2]
-        userObj = '{"id":' + id  + '",email":' + email  + ',"password":' + password  + '}'
-        usersObj.append(userObj)
+      db = database.get_db()
+      users = db.query("SELECT id,email,password from USER").row_factory
+     # usersObj = []
+     # for user in users:
+       # id = user[0]
+       # email = user[1]
+       # password = user[2]
+       # userObj = '{"id":' + id  + '",email":' + email  + ',"password":' + password  + '}'
+       # usersObj.append(userObj)
+      userObj = Flask.json.jsonify(users)
       return usersObj
 
-    @app.route('/user/<int:userid>',method=['GET','POST'])
+    @app.route('/user/<int:userid>',methods=['GET'])
     def userSpecific(userid):
-      user = db.execute("SELECT email,password from USER WHERE USER.id = '$userid';")
-      email = "example@mst.edu"
-      password = "d2d"
-      userObj = '{"id":'  + userid  + ',"email":' + email  + ',"password":' + password  + '}'
+      db = database.get_db()
+      user = db.query("SELECT email,password from user WHERE user.id = '$userid'").row_factory
+      #email = user[0]
+      #password = user[1]
+      #userObj = '{"id":'  + userid  + ',"email":' + email  + ',"password":' + password  + '}'
+      userObj = Flask.json.jsonify(user)
       return userObj
 
-    @app.route('/vehicle/<int:vehicleid>',method=['GET','POST'])
+    @app.route('/vehicle/<int:vehicleid>',methods=['GET'])
     def vehicle(vehicleid):
-      id = "0"
-      user_id = "0"
-      type_id = "0"
-      state = "TX"
-      license = "ZX23YSB"
-      make = "Tesla"
-      year = "2017"
-      vehicleObj = '{"id":' + id  + ',"user_id":' + user_id  + ',"type_id":' + type_id  + ',"state":' + state  + ',"license":' + license  + ',"make":' + make  + ',"year":' + year  + '}'
+      db = database.get_db()
+      vehicle = db.query("SELECT user_id,type_id,state,license,make,model,year from vehicle WHERE vehicle.id = '$vehicleid'").row_factory
+      #user_id = vehicle[0]
+      #type_id = vehicle[1]
+      #state = vehicle[2]
+      #license = vehicle[3]
+      #make = vehicle[4]
+      #year = vehicle[5]
+      #vehicleObj = '{"id":' + vehicleid  + ',"user_id":' + user_id  + ',"type_id":' + type_id  + ',"state":' + state  + ',"license":' + license  + ',"make":' + make  + ',"year":' + year  + '}'
+      vehicleObj = Flask.json.jsonify(vehicle)
       return vehicleObj
 
-    @app.route('/reservation/<int:vehicleid>',method=['GET','POST'])
+    @app.route('/reservation/<int:vehicleid>',methods=['GET'])
     def reservation(vehicleid):
-      vehicle_id = "0"
-      lot_id = "0"
-      start_time = "6:00"
-      end_time = "10:00"
-      reservationObj = '{' + '"vehicle_id":' + vehicle_id  + ',"lot_id":' + lot_id  + ',"start_time":' + start_time  + ',"end_time":' + end_time  + '}'
+      db = database.get_db()
+      reservation = db.query("SELECT lot_id,start_time,end_time from reservation WHERE reservation.vehicleid = '$vehicle_id'").row_factory
+      #lot_id = reservation[0]
+      #start_time = reservation[1]
+      #end_time = reservation[2]
+      #reservationObj = '{' + '"vehicle_id":' + vehicle_id  + ',"lot_id":' + lot_id  + ',"start_time":' + start_time  + ',"end_time":' + end_time  + '}'
+      reservationObj = Flask.json.jsonify(reservation)
       return reservationObj
 
-    @app.route('/lot/<int:lotid>',method=['GET','POST'])
+    @app.route('/lot/<int:lotid>',methods=['GET'])
     def lot(lotid):
-      lotObj = '{"id":' + '0' + ',"name":' + '"A"' + ',"location":' + '"west"' + '}'
+      db = database.get_db()
+      lot = db.query("SELECT name,location from lot WHERE lotid.id = '$lotid'").row_factory
+      #name = lot[0]
+      #location = lot[1]
+      #lotObj = '{"id":' + lotid + ',"name":' + name  + ',"location":' + location  + '}'
+      lotObj = Flask.json.jsonify(row_factory)
       return lotObj
 
-    @app.route('/vehicleType/<int:vehicleid>',method=['GET','POST'])
+    @app.route('/vehicleType/<int:vehicleid>',methods=['GET'])
     def vehicleType(vehicleid):
-      vehicleType  = '{"id":' + '0' + ',"name":' + '"sedan"' + '}'
+      db = database.get_db()
+      vehicle = db.query("SELECT name from vehicletype WHERE vehicletype.id = '$vehicleid'").row_factory
+      #name = vehicle[0]
+      #vehicleType  = '{"id":' + vehicleid + ',"name":' + name  + '}'
+      vehicletype = Flask.json.jsonify(row_factory)
       return vehicleType
 
     return app
