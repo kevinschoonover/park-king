@@ -7,6 +7,6 @@ setup(
     ],
     install_requires=[
         'flask',
-        'psycopg2',
+        'flask_restful',
     ],
 )
