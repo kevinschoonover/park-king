@@ -47,6 +47,8 @@ def query(query, parameters=(), single=False):
     a single value depending on the ``single`` argument.
     """
     cur = get_db().execute(query, parameters)
+    cur.row_factory = dict_factory
+    #cur = cur.cursor()
     if single:
         result = cur.fetchone()
     else:
@@ -59,3 +61,9 @@ def commit():
     Commits any changes made to the database so other connections can see it.
     """
     get_db().commit()
+
+def dict_factory(cursor,row):
+    d = {}
+    for idx,col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
