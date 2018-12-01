@@ -8,7 +8,7 @@ from flask import g
 #DATABASE = ':memory:'
 DATABASE = '/tmp/park-king.db'
 
-def init_db(app):
+def init_app(app):
     """
     Initializes the database and runs the ``schema.sql`` script
     to set up tables.
