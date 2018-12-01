@@ -1,14 +1,17 @@
-CREATE TABLE IF NOT EXISTS vehicle_type (
+DROP TABLE IF EXISTS vehicle_type;
+CREATE TABLE vehicle_type (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS space_type (
+DROP TABLE IF EXISTS space_type;
+CREATE TABLE space_type (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS allowed_in (
+DROP TABLE IF EXISTS allowed_in;
+CREATE TABLE allowed_in (
     vtype_id INTEGER,
     stype_id INTEGER,
     PRIMARY KEY (vtype_id, stype_id),
@@ -16,13 +19,15 @@ CREATE TABLE IF NOT EXISTS allowed_in (
     FOREIGN KEY (stype_id) REFERENCES space_type
 );
 
-CREATE TABLE IF NOT EXISTS user (
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
     id INTEGER PRIMARY KEY,
     email VARCHAR(80) NOT NULL UNIQUE,
     password VARCHAR(80) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS vehicle (
+DROP TABLE IF EXISTS vehicle;
+CREATE TABLE vehicle (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
     type_id INTEGER NOT NULL,
@@ -36,12 +41,14 @@ CREATE TABLE IF NOT EXISTS vehicle (
     UNIQUE (state, license)
 );
 
-CREATE TABLE IF NOT EXISTS lot (
+DROP TABLE IF EXISTS lot;
+CREATE TABLE lot (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS lot_spaces (
+DROP TABLE IF EXISTS lot_spaces;
+CREATE TABLE lot_spaces (
     lot_id INTEGER,
     stype_id INTEGER,
     capacity INTEGER NOT NULL,
@@ -50,7 +57,8 @@ CREATE TABLE IF NOT EXISTS lot_spaces (
     FOREIGN KEY (stype_id) REFERENCES space_type
 );
 
-CREATE TABLE IF NOT EXISTS lot_location (
+DROP TABLE IF EXISTS lot_location;
+CREATE TABLE lot_location (
     lot_id INTEGER,
     idx INTEGER,
     latitude FLOAT NOT NULL,
@@ -59,7 +67,8 @@ CREATE TABLE IF NOT EXISTS lot_location (
     FOREIGN KEY (lot_id) REFERENCES lot
 );
 
-CREATE TABLE IF NOT EXISTS reservation (
+DROP TABLE IF EXISTS reservation;
+CREATE TABLE reservation (
     vehicle_id INTEGER NOT NULL,
     lot_id INTEGER NOT NULL,
     start_time INTEGER NOT NULL,
@@ -68,12 +77,14 @@ CREATE TABLE IF NOT EXISTS reservation (
     FOREIGN KEY (lot_id) REFERENCES lot
 );
 
-CREATE TABLE IF NOT EXISTS ticket_device (
+DROP TABLE IF EXISTS ticket_device;
+CREATE TABLE ticket_device (
     id INTEGER PRIMARY KEY,
     auth_token VARCHAR(80)
 );
 
-CREATE TABLE IF NOT EXISTS ticket (
+DROP TABLE IF EXISTS ticket;
+CREATE TABLE ticket (
     device_id INTEGER NOT NULL,
     vehicle_id INTEGER NOT NULL,
     lot_id INTEGER NOT NULL,
@@ -82,3 +93,16 @@ CREATE TABLE IF NOT EXISTS ticket (
     FOREIGN KEY (vehicle_id) REFERENCES vehicle,
     FOREIGN KEY (lot_id) REFERENCES lot
 );
+
+INSERT INTO space_type (id, name) VALUES
+    (1, 'Motorcycle'),
+    (2, 'Car');
+
+INSERT INTO vehicle_type (id, name) VALUES
+    (1, 'Motorcycle'),
+    (2, 'Car');
+
+INSERT INTO allowed_in (vtype_id, stype_id) VALUES
+    (1, 1),
+    (1, 2),
+    (2, 2),;
