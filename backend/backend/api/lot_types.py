@@ -4,7 +4,7 @@ from flask_restful import Resource
 from backend.util import validate_exists
 from backend import database
 
-class VehicleTypeList(Resource):
+class LotTypeList(Resource):
   def get(self):
-    rows = database.query('SELECT * FROM vehicle_type')
+    rows = database.query('SELECT * FROM lot')
     return [dict(row) for row in rows], 200
