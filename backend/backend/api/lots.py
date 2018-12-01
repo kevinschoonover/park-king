@@ -49,3 +49,10 @@ class LotLocation(Resource):
 
         return result
 
+class LotCapacity(Resource):
+    def get(self, lot_id):
+        rows = database.query(
+            'SELECT lot_id, stype_id, capacity FROM lot_spaces WHERE lot_id = ?',
+            [lot_id],
+        )
+        return [dict(row) for row in rows]

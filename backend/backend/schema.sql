@@ -125,3 +125,7 @@ INSERT INTO lot_location (lot_id, polygon_id, vertex_id, latitude, longitude) VA
     (2, 1, 4, 37.95659, -91.77682),
     (2, 1, 5, 37.95593, -91.77848),
     (2, 1, 6, 37.95545, -91.78023);
+
+INSERT INTO lot_spaces (lot_id, stype_id, capacity) VALUES
+    (1, 1, 30),
+    (1, 2, 200);
