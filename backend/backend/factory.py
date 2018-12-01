@@ -7,6 +7,6 @@ def create_app():
     app = Flask('backend')
     api.init_app(app)
     database.init_app(app)
-    cors = CORS(app, resources={r'*': {'origins': r'*'}})
+    cors = CORS(app)
 
     return app
