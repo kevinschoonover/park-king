@@ -1,16 +1,25 @@
+DROP TABLE IF EXISTS ticket;
+DROP TABLE IF EXISTS ticket_device;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS lot_location;
+DROP TABLE IF EXISTS lot_spaces;
+DROP TABLE IF EXISTS lot;
+DROP TABLE IF EXISTS vehicle;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS allowed_in;
+DROP TABLE IF EXISTS space_type;
 DROP TABLE IF EXISTS vehicle_type;
+
 CREATE TABLE vehicle_type (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS space_type;
 CREATE TABLE space_type (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS allowed_in;
 CREATE TABLE allowed_in (
     vtype_id INTEGER,
     stype_id INTEGER,
@@ -19,14 +28,12 @@ CREATE TABLE allowed_in (
     FOREIGN KEY (stype_id) REFERENCES space_type
 );
 
-DROP TABLE IF EXISTS user;
 CREATE TABLE user (
     id INTEGER PRIMARY KEY,
     email VARCHAR(80) NOT NULL UNIQUE,
     password VARCHAR(80) NOT NULL
 );
 
-DROP TABLE IF EXISTS vehicle;
 CREATE TABLE vehicle (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -41,13 +48,11 @@ CREATE TABLE vehicle (
     UNIQUE (state, license)
 );
 
-DROP TABLE IF EXISTS lot;
 CREATE TABLE lot (
     id INTEGER PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS lot_spaces;
 CREATE TABLE lot_spaces (
     lot_id INTEGER,
     stype_id INTEGER,
@@ -57,7 +62,6 @@ CREATE TABLE lot_spaces (
     FOREIGN KEY (stype_id) REFERENCES space_type
 );
 
-DROP TABLE IF EXISTS lot_location;
 CREATE TABLE lot_location (
     lot_id INTEGER,
     idx INTEGER,
@@ -67,7 +71,6 @@ CREATE TABLE lot_location (
     FOREIGN KEY (lot_id) REFERENCES lot
 );
 
-DROP TABLE IF EXISTS reservation;
 CREATE TABLE reservation (
     vehicle_id INTEGER NOT NULL,
     lot_id INTEGER NOT NULL,
@@ -77,13 +80,11 @@ CREATE TABLE reservation (
     FOREIGN KEY (lot_id) REFERENCES lot
 );
 
-DROP TABLE IF EXISTS ticket_device;
 CREATE TABLE ticket_device (
     id INTEGER PRIMARY KEY,
     auth_token VARCHAR(80)
 );
 
-DROP TABLE IF EXISTS ticket;
 CREATE TABLE ticket (
     device_id INTEGER NOT NULL,
     vehicle_id INTEGER NOT NULL,
@@ -105,4 +106,4 @@ INSERT INTO vehicle_type (id, name) VALUES
 INSERT INTO allowed_in (vtype_id, stype_id) VALUES
     (1, 1),
     (1, 2),
-    (2, 2),;
+    (2, 2);
