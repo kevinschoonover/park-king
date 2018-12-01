@@ -64,10 +64,11 @@ CREATE TABLE lot_spaces (
 
 CREATE TABLE lot_location (
     lot_id INTEGER,
-    idx INTEGER,
+    polygon_id INTEGER,
+    vertex_id INTEGER,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
-    PRIMARY KEY (lot_id, idx),
+    PRIMARY KEY (lot_id, polygon_id, vertex_id),
     FOREIGN KEY (lot_id) REFERENCES lot
 );
 
@@ -107,3 +108,20 @@ INSERT INTO allowed_in (vtype_id, stype_id) VALUES
     (1, 1),
     (1, 2),
     (2, 2);
+
+INSERT INTO lot (id, name) VALUES
+    (1, 'Lot H'),
+    (2, 'Lot S');
+
+INSERT INTO lot_location (lot_id, polygon_id, vertex_id, latitude, longitude) VALUES
+    (1, 1, 1, 37.95509, -91.78012),
+    (1, 1, 2, 37.95505, -91.77723),
+    (1, 1, 3, 37.95466, -91.77727),
+    (1, 1, 4, 37.95465, -91.78011),
+
+    (2, 1, 1, 37.95587, -91.78055),
+    (2, 1, 2, 37.95639, -91.78023),
+    (2, 1, 3, 37.95751, -91.77680),
+    (2, 1, 4, 37.95659, -91.77682),
+    (2, 1, 5, 37.95593, -91.77848),
+    (2, 1, 6, 37.95545, -91.78023);
