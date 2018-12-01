@@ -51,3 +51,11 @@ class UserVehicles(Resource):
         )
         database.commit()
         return None, 201
+
+class UserTickets(Resource):
+    def get(self,user_id):
+        rows = database.query(
+            'SELECT * FROM ticket JOIN vehicle WHERE user_id = ?'
+            [user_id],
+        )
+        return [dict(row) for row in rows]
