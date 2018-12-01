@@ -46,6 +46,10 @@ const styles = theme => ({
 	sizeIcon: {
 		fontSize: 36,
 	},
+  popup: {
+    width: 250,
+    height: 125,
+  }
 })
 
 class FullMap extends Component {
@@ -99,6 +103,7 @@ class FullMap extends Component {
   }
 
   renderPolygons() {
+    const { classes } = this.props
     let polygons = []
 
     for(let i=0; i < this.state.lots.length; i++) {
@@ -108,7 +113,33 @@ class FullMap extends Component {
         polygons.push(
           <Polygon color="purple" positions={lot.location} key={i}>
             <Popup>
-              Lot {lot.name}
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                className={classes.popup}
+                spacing={16}
+              >
+                <Grid container item direction="row" alignItems="space-between">
+                  <Grid item xs>
+                  <Typography variant="h6">
+                    Lot {lot.name}
+                  </Typography>
+                  </Grid>
+                  <Grid item xs style={{textAlign: "right"}}>
+                    <Typography variant="h6">
+                      45/50
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container justify="center" alignItems="center">
+                  <Link to="/">
+                    <Fab color="secondary" variant="extended" aria-label="Delete" >
+                      Make a Reservation
+                    </Fab>
+                  </Link>
+                </Grid>
+              </Grid>
             </Popup>
           </Polygon>
         )

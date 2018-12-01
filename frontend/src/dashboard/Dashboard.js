@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import { auth } from '../auth';
+
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,6 +15,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 
+import Eject from '@material-ui/icons/Eject';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -39,6 +42,11 @@ class Dashboard extends React.Component {
   state = {
     open: true,
     menu: VEHICLE_MENU,
+  };
+
+  logOut = () => {
+    auth.signOut();
+    this.props.history.push("/");
   };
 
   handleDrawerOpen = () => {
@@ -68,7 +76,6 @@ class Dashboard extends React.Component {
   setReservationForm = () => {
     this.setState({ menu: RESERVATION_FORM });
   };
-
 
   render() {
     const { classes } = this.props;
@@ -124,10 +131,8 @@ class Dashboard extends React.Component {
               >
                 Hello, Kevin!
               </Typography>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
+              <IconButton color="inherit" onClick={this.logOut}>
+                <Eject/>
               </IconButton>
             </Toolbar>
           </AppBar>

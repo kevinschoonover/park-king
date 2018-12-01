@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
+
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import MapIcon from '@material-ui/icons/Map';
 
 import VehiclePaper from './VehiclePaper';
 
@@ -25,7 +31,8 @@ const styles = theme => ({
 class Reservation extends React.Component {
   state = {
     reservations: [],
-  }
+    open: false,
+  };
 
   componentDidMount() {
     const reservations = [
@@ -47,8 +54,17 @@ class Reservation extends React.Component {
       },
     ]
 
-    this.setState({reservations})
+    this.setState({ reservations })
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+
 
   renderReservations() {
     let reservations = []
@@ -84,14 +100,34 @@ class Reservation extends React.Component {
         <Grid container spacing={16}>
           {this.renderReservations()}
         </Grid>
-        <Fab
-          color="primary"
-          aria-label="Add"
-          className={classes.fab}
-          onClick={() => this.props.onForm()}
-        >
-          <AddIcon />
-        </Fab>
+        <div className={classes.fab}>
+          <SpeedDial
+            ariaLabel="SpeedDial example"
+            icon={<SpeedDialIcon />}
+            onBlur={this.handleClose}
+            onClick={this.handleClick}
+            onClose={this.handleClose}
+            onFocus={this.handleOpen}
+            onMouseEnter={this.handleOpen}
+            onMouseLeave={this.handleClose}
+            open={this.state.open}
+            direction="up"
+          >
+            <SpeedDialAction
+              icon={<AddIcon />}
+              tooltipTitle='Add'
+              onClick={this.props.onForm}
+            />
+            <SpeedDialAction
+              icon={<MapIcon />}
+              tooltipTitle='Map'
+              ButtonProps={{
+                component: Link,
+                to: "/map/"
+              }}
+            />
+          </SpeedDial>
+        </div>
       </div>
     )
   }
