@@ -24,7 +24,11 @@ class UserList(Resource):
             abort(400, str(e))
 
         database.commit()
-        return '', 201
+        row = database.query(
+            'SELECT * FROM user WHERE id = last_insert_rowid()',
+            single=True,
+        )
+        return dict(row), 201
 
 
 class UserSingle(Resource):
@@ -73,7 +77,11 @@ class UserVehicles(Resource):
             abort(400, str(e))
 
         database.commit()
-        return '', 201
+        row = database.query(
+            'SELECT * FROM vehicle WHERE id = last_insert_rowid()',
+            single=True,
+        )
+        return dict(row), 201
 
 class UserTickets(Resource):
     def get(self,user_id):
