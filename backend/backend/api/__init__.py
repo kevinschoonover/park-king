@@ -10,6 +10,8 @@ api.add_resource(space_types.SpaceTypeList, '/space_types/')
 api.add_resource(users.UserList, '/users/')
 api.add_resource(users.UserSingle, '/users/<int:user_id>/')
 api.add_resource(users.UserVehicles, '/users/<int:user_id>/vehicles/')
+api.add_resource(users.UserTickets, '/users/<int:user_id>/tickets/')
+api.add_resource(users.UserReservations, '/users/<int:user_id>/reservations/')
 api.add_resource(vehicle_types.VehicleTypeList, '/vehicle_types/')
 
 def init_app(app):

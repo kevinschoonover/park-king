@@ -55,7 +55,7 @@ class UserVehicles(Resource):
 class UserTickets(Resource):
     def get(self,user_id):
         rows = database.query(
-            'SELECT * FROM ticket JOIN vehicle WHERE user_id = ?'
+            'SELECT * FROM ticket JOIN vehicle WHERE user_id = ?',
             [user_id],
         )
         return [dict(row) for row in rows]
@@ -63,7 +63,7 @@ class UserTickets(Resource):
 class UserReservations(Resource):
     def get(self,user_id):
         rows = database.query(
-            'SELECT vehicle_id,lot_id,start_time,end_time  FROM reservation JOIN vehicle WHERE user_id = ?'
+            'SELECT vehicle_id,lot_id,start_time,end_time  FROM reservation JOIN vehicle WHERE user_id = ?',
             [user_id],
         )
         return [dict(row) for row in rows]
