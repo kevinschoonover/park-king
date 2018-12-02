@@ -15,40 +15,9 @@ const styles = theme => ({
 });
 
 class Ticket extends React.Component {
-  state = {
-    tickets: []
-  }
-
-  componentDidMount() {
-    const tickets = [
-      {
-        device_id: 1,
-        vehicle_id: 1,
-        lot_id: 1,
-        time: "October 25th 2016",
-        vehicle: {
-          id: 1,
-          user_id: 1,
-          type_id: 1,
-          state: "TX",
-          license: "123456",
-          make: "Tesla",
-          model: "3",
-          year: "2018"
-        },
-        lot: {
-          name: "A",
-        }
-      }
-    ]
-
-    this.setState({tickets});
-  }
-
   renderTickets() {
     let tickets = []
-    for (let i=0; i < this.state.tickets.length; i++) {
-      const ticket = this.state.tickets[i]
+    this.props.tickets.forEach(function(ticket, i) {
       tickets.push(
         <VehiclePaper
           key={i}
@@ -59,7 +28,8 @@ class Ticket extends React.Component {
           lot={ticket.lot.name}
         />
       );
-    }
+
+    })
 
     return tickets
   }

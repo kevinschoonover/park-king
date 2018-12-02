@@ -29,32 +29,8 @@ const styles = theme => ({
 
 class Reservation extends React.Component {
   state = {
-    reservations: [],
     open: false,
   };
-
-  componentDidMount() {
-    const reservations = [
-      {
-        vehicle_id: 1,
-        lot_id: 1,
-        start_time: "October 25th 2018",
-        end_time: "October 26th 2018",
-        vehicle: {
-          state: "TX",
-          license: "123456",
-          make: "Tesla",
-          model: "3",
-          year: "2018",
-        },
-        lot: {
-          name: "A"
-        }
-      },
-    ]
-
-    this.setState({ reservations })
-  }
 
   handleClose = () => {
     this.setState({ open: false });
@@ -66,9 +42,10 @@ class Reservation extends React.Component {
 
 
   renderReservations() {
+    const reservationObj = this.props.reservations
     let reservations = []
-    for(let i=0; i < this.state.reservations.length; i++) {
-      const reservation = this.state.reservations[i]
+    for(let i=0; i < reservationObj.length; i++) {
+      const reservation = reservationObj[i]
       reservations.push(
         <VehiclePaper
           color

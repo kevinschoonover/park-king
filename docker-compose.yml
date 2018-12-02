@@ -34,7 +34,6 @@ services:
         depends_on:
           - app
 
-
 networks:
   web_nw:
     driver: bridge

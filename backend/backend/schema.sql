@@ -110,8 +110,8 @@ INSERT INTO allowed_in (vtype_id, stype_id) VALUES
     (2, 2);
 
 INSERT INTO lot (id, name) VALUES
-    (1, 'Lot H'),
-    (2, 'Lot S');
+    (1, 'H'),
+    (2, 'S');
 
 INSERT INTO lot_location (lot_id, polygon_id, vertex_id, latitude, longitude) VALUES
     (1, 1, 1, 37.95509, -91.78012),

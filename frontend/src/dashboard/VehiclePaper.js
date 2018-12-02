@@ -8,6 +8,8 @@ import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import orange from '@material-ui/core/colors/orange';
 
+import moment from "moment";
+
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
   container: {
@@ -40,6 +42,10 @@ const VehiclePaper = (props) => {
     div_color = colors[Math.floor(Math.random()*colors.length)];
   }
 
+  const time = moment(props.time)
+  const day = time.format("MMMM Do YYYY");
+  const hour = time.format("h:mm:ss a");
+
   return (
     <Grid item xs={12}>
       <Paper className={classes.container} style={{backgroundColor: div_color}}>
@@ -56,10 +62,10 @@ const VehiclePaper = (props) => {
           </Grid>
           <Grid item container xs={6} alignItems="center" justify="center" direction="column">
             <Typography className={classes.date} variant="body1">
-              {props.time}
+              {day}
             </Typography>
             <Typography className={classes.date} variant="body1">
-              16:40 (TODO)
+              {hour}
             </Typography>
           </Grid>
           <Grid item container xs={2} alignItems="center" justify="center">

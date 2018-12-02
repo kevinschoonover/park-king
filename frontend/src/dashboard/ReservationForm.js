@@ -15,6 +15,11 @@ import Send from "@material-ui/icons/Send";
 
 import { DateTimePicker } from 'material-ui-pickers';
 
+import axios from 'axios';
+import moment from 'moment';
+
+import { auth } from '../auth';
+
 
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -51,10 +56,10 @@ const styles = theme => ({
 
 class ReservationForm extends React.Component {
   state = {
-    startDate: new Date('2018-01-01T18:54'),
-    endDate: new Date('2018-01-01T18:54'),
-    lot: "Lot A",
-    vehicle: "Tesla 3"
+    start_time: moment().add(1, 'hours'),
+    end_time: moment().add(2, 'hours'),
+    lot_id: 1,
+    vehicle_id: 1
   };
 
   handleChange = name => event => {
@@ -71,11 +76,47 @@ class ReservationForm extends React.Component {
 
   handleSubmit = () => {
     this.props.onSubmit()
+    const url = process.env.REACT_APP_API + `/users/${auth.userID()}/reservations/`;
+    axios.post(url, {...this.state})
+      .then((response) => {
+        this.onSubmit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  renderVehicles() {
+    let items = []
+    const vehicles = this.props.vehicles
+    for(let i=0; i < vehicles.length; i++)
+    {
+      const vehicle = vehicles[i]
+      items.push(
+        <MenuItem key={i} value={ vehicle.id }>{ vehicle.make } { vehicle.model } ({vehicle.license})</MenuItem>
+      )
+    }
+
+    return items
+  }
+
+  renderLots() {
+    let items = []
+    const lots = this.props.lots
+    for(let i=0; i < lots.length; i++)
+    {
+      const lot_id = lots[i]
+      items.push(
+        <MenuItem key={i} value={ lot_id.id }>{ lot_id.name }</MenuItem>
+      )
+    }
+
+    return items
+  }
 
   render() {
     const { classes } = this.props;
-    const { startDate, endDate } = this.state;
+    const { start_time, end_time } = this.state;
 
     return (
       <div>
@@ -87,61 +128,49 @@ class ReservationForm extends React.Component {
           <Grid container spacing={16} direction="column">
             <Grid item>
               <DateTimePicker
-                value={startDate}
+                value={start_time}
                 className={classes.picker}
                 disablePast
-                onChange={this.handleDateChange('startDate')}
+                onChange={this.handleDateChange('start_time')}
                 label="Start Time"
                 showTodayButton
               />
               <DateTimePicker
-                value={endDate}
+                value={end_time}
                 className={classes.picker}
                 disablePast
-                onChange={this.handleDateChange('endDate')}
+                onChange={this.handleDateChange('end_time')}
                 label="End Time"
                 showTodayButton
               />
             </Grid>
             <Grid item>
               <FormControl className={classes.formControl} margin="normal">
-                <InputLabel shrink htmlFor="lot-label">
-                  Lot
+                <InputLabel shrink htmlFor="lot_id-label">
+                  lot_id
                 </InputLabel>
                 <Select
-                  value={this.state.lot}
-                  onChange={this.handleChange('lot')}
-                  input={<Input name="lot" id="lot-label" />}
+                  value={this.state.lot_id}
+                  onChange={this.handleChange('lot_id')}
                   displayEmpty
-                  name="lot"
+                  name="lot_id"
                   className={classes.selectEmpty}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  { this.renderLots() }
                 </Select>
               </FormControl>
               <FormControl className={classes.formControl} margin="normal">
-                <InputLabel shrink htmlFor="vehicle-label">
-                  Vehicle
+                <InputLabel shrink htmlFor="vehicle_id-label">
+                  vehicle_id
                 </InputLabel>
                 <Select
-                  value={this.state.vehicle}
-                  onChange={this.handleChange('vehicle')}
-                  input={<Input name="vehicle" id="vehicle-label" />}
+                  value={this.state.vehicle_id}
+                  onChange={this.handleChange('vehicle_id')}
                   displayEmpty
-                  name="vehicle"
+                  name="vehicle_id"
                   className={classes.selectEmpty}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  { this.renderVehicles() }
                 </Select>
               </FormControl>
             </Grid>

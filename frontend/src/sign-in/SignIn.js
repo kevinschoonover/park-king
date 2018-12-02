@@ -63,6 +63,7 @@ class SignIn extends React.Component {
     email: "",
     password: "",
     open: false,
+    message: "",
   }
 
   handleClick = () => {
@@ -84,16 +85,38 @@ class SignIn extends React.Component {
   };
 
   onSignIn() {
-    axios.get(process.env.REACT_APP_API + "/users/")
-    .then((response) => console.log(response))
-    .catch((response) => console.log(response))
-    // auth.authenticate();
-    // this.setState({ state: this.state });
+    const email = this.state.email
+    const password = this.state.password
+
+    axios.post(process.env.REACT_APP_API + "/users/auth/", {email, password})
+    .then((response) => {
+      auth.authenticate(response.data);
+      this.setState({state: this.state})
+    })
+    .catch((error) => {
+      if (error.response.status === 400) {
+        this.setState({ open: true, message: "User Not Found" });
+      }
+      else {
+        this.setState({ open: true, message: "Internal Server Error" });
+      }
+    })
   }
 
   onSignUp() {
-    auth.authenticate();
-    this.setState({ state: this.state });
+    const email = this.state.email
+    const password = this.state.password
+
+    axios.post(process.env.REACT_APP_API + "/users/", {email, password})
+    .then((response) => {
+      auth.authenticate(response.data);
+      this.setState({state: this.state})
+    })
+    .catch((error) => {
+      if (error.response.status === 500) {
+        this.setState({ open: true, message: "Internal Server Error" });
+      }
+    })
   }
 
   render() {
@@ -120,7 +143,7 @@ class SignIn extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">I love snacks</span>}
+          message={this.state.message}
         />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>

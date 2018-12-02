@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import axios from "axios";
+
 import { auth } from '../auth';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -13,6 +15,7 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import Eject from '@material-ui/icons/Eject';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -36,10 +39,23 @@ const RESERVATION_MENU = "reservation";
 const VEHICLE_FORM = "vehicle_form";
 const RESERVATION_FORM = "reservation_form";
 
+const url = process.env.REACT_APP_API;
+
 class Dashboard extends React.Component {
   state = {
     open: true,
     menu: VEHICLE_MENU,
+    lots: [],
+    vehicle_types: [],
+    vehicles: [],
+    reservations: [],
+    tickets: [],
+    snacks: false,
+    message: "",
+  };
+
+  openSnack = (message) => {
+    this.setState({ snack: true, message });
   };
 
   logOut = () => {
@@ -53,6 +69,14 @@ class Dashboard extends React.Component {
 
   handleDrawerClose = () => {
     this.setState({ open: false });
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ snack: false });
   };
 
   setTicketMenu = () => {
@@ -75,6 +99,79 @@ class Dashboard extends React.Component {
     this.setState({ menu: RESERVATION_FORM });
   };
 
+  updateVehicles = () => {
+    axios.get(url + `/users/${auth.userID()}/vehicles/`)
+      .then((response) => {
+        const vehicles = response.data;
+        this.setState({ vehicles });
+      })
+      .catch((error) => {
+        this.openSnack("Internal Server Error");
+      });
+  }
+
+  updateReservations = () => {
+    let reservations = []
+    axios.get(url + `/users/${auth.userID()}/reservations/`)
+      .then((response) => {
+        reservations = response.data;
+        let promises = []
+
+        reservations.forEach((reservation, index) => {
+          promises.push(
+            axios.get(url + `/vehicles/${reservation.vehicle_id}/`)
+              .then((response) => {
+                reservation.vehicle = response.data
+              })
+          );
+          promises.push(axios.get(url + `/lots/${reservation.lot_id}/`)
+            .then((response) => {
+              reservation.lot = response.data
+            })
+          );
+        })
+
+        Promise.all(promises).then((response) =>{
+          this.setState({ reservations });
+        });
+      })
+      .catch((error) => {
+        this.openSnack("Internal Server Error");
+      });
+  }
+
+  updateTickets = () => {
+    axios.get(url + `/users/${auth.userID()}/tickets/`)
+      .then((response) => {
+        this.setState({ tickets: response.data });
+      })
+      .catch((error) => {
+         this.openSnack("Internal Server Error");
+      })
+  }
+
+  componentDidMount() {
+    axios.get(url + '/lots/')
+      .then((response) => {
+        this.setState({ lots: response.data });
+      })
+      .catch((error) => {
+        this.openSnack("Internal Server Error");
+      });
+
+    axios.get(url + '/vehicle_types/')
+      .then((response) => {
+        this.setState({ vehicle_types: response.data });
+      })
+      .catch((error) => {
+        this.openSnack("Internal Server Error");
+      });
+
+    this.updateVehicles();
+    this.updateReservations();
+    this.updateTickets();
+  }
+
   render() {
     const { classes } = this.props;
     const menu = this.state.menu;
@@ -82,19 +179,29 @@ class Dashboard extends React.Component {
 
     switch (menu) {
       case TICKET_MENU:
-        main_menu = <Ticket />
+        main_menu = <Ticket tickets={this.state.tickets} />
         break;
       case RESERVATION_MENU:
-        main_menu = <Reservation onForm={() => this.setReservationForm()}/>
+        main_menu = <Reservation
+                      reservations={this.state.reservations}
+                      onForm={() => this.setReservationForm()}
+                    />
         break;
       case VEHICLE_MENU:
-        main_menu = <Vehicle onForm={() => this.setVehicleForm()}/>
+        main_menu = <Vehicle vehicles={this.state.vehicles} onForm={() => this.setVehicleForm()}/>
         break;
       case RESERVATION_FORM:
-        main_menu = <ReservationForm onSubmit={() => this.setReservationMenu()}/>
+        main_menu = <ReservationForm
+                      vehicles={this.state.vehicles}
+                      lots={this.state.lots}
+                      onSubmit={() => { this.updateReservations(); this.setReservationMenu(); }}
+                    />
         break;
       case VEHICLE_FORM:
-        main_menu = <VehicleForm onSubmit={() => this.setVehicleMenu()}/>
+        main_menu = <VehicleForm
+                      types={this.state.vehicle_types}
+                      onSubmit={() => { this.setVehicleMenu(); this.updateVehicles() }}
+                    />
         break;
       default:
         break;
@@ -127,7 +234,7 @@ class Dashboard extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                Hello, Kevin!
+                Hello, { auth.user().email }!
               </Typography>
               <IconButton color="inherit" onClick={this.logOut}>
                 <Eject/>
@@ -158,6 +265,20 @@ class Dashboard extends React.Component {
             { main_menu }
           </main>
         </div>
+        <Snackbar
+          open={this.state.snacks}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={this.state.message}
+        />
+
       </MuiPickersUtilsProvider>
     );
   }

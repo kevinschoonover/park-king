@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +14,8 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Send from "@material-ui/icons/Send";
+
+import { auth } from "../auth";
 
 
 const styles = theme => ({
@@ -51,8 +55,22 @@ class VehicleForm extends React.Component {
     year: '2018',
     state: 'Texas',
     license: 'tesla3',
-    vehicle_type: undefined,
+    type_id: 1,
   };
+
+  renderVehicleTypes() {
+    let items = []
+    const types = this.props.types
+    for(let i=0; i < types.length; i++)
+    {
+      const type = types[i]
+      items.push(
+        <MenuItem key={i} value={ type.id }>{ type.name }</MenuItem>
+      )
+    }
+
+    return items
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -61,7 +79,15 @@ class VehicleForm extends React.Component {
   };
 
   handleSubmit = () => {
-    this.props.onSubmit()
+    const url = process.env.REACT_APP_API + `/users/${auth.userID()}/vehicles/`;
+
+    axios.post(url, {...this.state})
+      .then((response) => {
+        this.props.onSubmit()
+      })
+      .catch((error) => {
+        console.log(error.response)
+      })
   };
 
   render() {
@@ -125,19 +151,14 @@ class VehicleForm extends React.Component {
                   Vehicle Type
                 </InputLabel>
                 <Select
-                  value={this.state.vehicle_type}
-                  onChange={this.handleChange('vehicle_type')}
-                  input={<Input name="vehicle_type" id="vehicle-type-label" />}
+                  value={this.state.type_id}
+                  onChange={this.handleChange('type_id')}
+                  input={<Input name="type_id" id="vehicle-type-label" />}
                   displayEmpty
-                  name="vehicle_type"
+                  name="type_id"
                   className={classes.selectEmpty}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  { this.renderVehicleTypes() }
                 </Select>
               </FormControl>
             </Grid>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
+import axios from "axios";
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
@@ -52,6 +54,8 @@ const styles = theme => ({
   }
 })
 
+const url = process.env.REACT_APP_API;
+
 class FullMap extends Component {
   state = {
     lat: 37.954403,
@@ -68,81 +72,72 @@ class FullMap extends Component {
   };
 
   componentDidMount() {
-    const lots = [
-      {
-        name: "S",
-        location: [
-          [37.95587,-91.78055],
-          [37.95639,-91.78023],
-          [37.95751,-91.77680],
-          [37.95659,-91.77682],
-          [37.95593,-91.77848],
-          [37.95545,-91.78023],
-        ]
-      },
-      {
-        name: "H",
-        location: [
-          [37.95509,-91.78012],
-          [37.95505,-91.77723],
-          [37.95466,-91.77727],
-          [37.95465,-91.78011],
-        ]
-      }
-    ]
-
+    let lots = []
     let show = {};
-    for (let i = 0; i < lots.length; i++) {
-      const lot = lots[i]
-      show[lot.name] = true
-    }
 
-    this.setState({lots});
-    this.setState({show});
+    axios.get(url + '/lots/')
+    .then((response) => {
+      lots = response.data
 
+      lots.forEach((lot, index) => {
+        axios.get(url + `/lots/${lot.id}/location`)
+          .then((response) => {
+            lot.position = response.data
+            show[lot.name] = true
+            this.setState({ show, lots });
+          })
+      })
+    })
+    .catch((error) => {
+      this.openSnack('Internal Server Error');
+    });
   }
 
   renderPolygons() {
     const { classes } = this.props
     let polygons = []
+    let count = 0
 
     for(let i=0; i < this.state.lots.length; i++) {
       const lot = this.state.lots[i]
 
       if (this.state.show[lot.name]) {
-        polygons.push(
-          <Polygon color="purple" positions={lot.location} key={i}>
-            <Popup>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                className={classes.popup}
-                spacing={16}
-              >
-                <Grid container item direction="row" alignItems="space-between">
-                  <Grid item xs>
-                  <Typography variant="h6">
-                    Lot {lot.name}
-                  </Typography>
-                  </Grid>
-                  <Grid item xs style={{textAlign: "right"}}>
+        for (let j=0; j < lot.position.length; j++) {
+          polygons.push(
+            <Polygon color="purple" positions={lot.position[j]} key={count}>
+              <Popup>
+                <Grid
+                  container
+                  direction="column"
+                  justify="center"
+                  className={classes.popup}
+                  spacing={16}
+                >
+                  <Grid container item direction="row" alignItems="flex-end">
+                    <Grid item xs>
                     <Typography variant="h6">
-                      45/50
+                      Lot {lot.name}
                     </Typography>
+                    </Grid>
+                    <Grid item xs style={{textAlign: "right"}}>
+                      <Typography variant="h6">
+                        45/50
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item container justify="center" alignItems="center">
+                    <Link to="/">
+                      <Fab color="secondary" variant="extended" aria-label="Delete" >
+                        Make a Reservation
+                      </Fab>
+                    </Link>
                   </Grid>
                 </Grid>
-                <Grid item container justify="center" alignItems="center">
-                  <Link to="/">
-                    <Fab color="secondary" variant="extended" aria-label="Delete" >
-                      Make a Reservation
-                    </Fab>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Popup>
-          </Polygon>
-        )
+              </Popup>
+            </Polygon>
+          )
+          count += 1;
+        }
       }
     }
 
@@ -162,9 +157,10 @@ class FullMap extends Component {
 					spacing={8}
 					className={classes.lotContainer}
 					justify="space-between"
+          key={i}
 				>
           <Grid item>
-            <Typography key={i} variant="subtitle1" className={classes.lotLabel}>
+            <Typography variant="subtitle1" className={classes.lotLabel}>
               Lot {lot.name}
             </Typography>
           </Grid>
@@ -174,7 +170,7 @@ class FullMap extends Component {
               icon={<CheckBoxOutlineBlankIcon className={classes.sizeIcon} />}
               checkedIcon={<CheckBoxIcon className={classes.sizeIcon} />}
               value={lot.name}
-              checked={this.state.show[lot.name]}
+              checked={!!this.state.show[lot.name]}
               onChange={this.handleChange(lot.name)}
 						/>
           </Grid>
