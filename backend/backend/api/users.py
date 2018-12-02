@@ -98,3 +98,24 @@ class UserReservations(Resource):
             [user_id],
         )
         return [dict(row) for row in rows]
+
+    def post(self, user_id):
+        data = request.get_json()
+        validate_exists(data, ['vehicle_id', 'lot_id', 'start_time', 'end_time'])
+        try:
+            database.query(
+                '''INSERT INTO reservation
+                    (vehicle_id, lot_id, start_time, end_time)
+                    VALUES (?, ?, ?, ?)
+                ''',
+                [data['vehicle_id'], data['lot_id'], data['start_time'], data['end_time']],
+            )
+        except IntegrityError as e:
+            abort(400, str(e))
+
+        database.commit()
+        row = database.query(
+            'SELECT * FROM reservation WHERE rowid = last_insert_rowid()',
+            single=True,
+        )
+        return dict(row), 201
