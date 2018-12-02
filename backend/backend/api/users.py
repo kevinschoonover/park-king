@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError
+
 from flask import abort, make_response, request
 from flask_restful import Resource
 
@@ -13,10 +15,14 @@ class UserList(Resource):
     def post(self):
         data = request.get_json()
         validate_exists(data, ['email', 'password'])
-        database.query(
-            'INSERT INTO user (email, password) VALUES (?, ?)',
-            [data['email'], data['password']],
-        )
+        try:
+            database.query(
+                'INSERT INTO user (email, password) VALUES (?, ?)',
+                [data['email'], data['password']],
+            )
+        except IntegrityError as e:
+            abort(400, str(e))
+
         database.commit()
         return None, 201
 
@@ -43,11 +49,15 @@ class UserVehicles(Resource):
     def post(self, user_id):
         data = request.get_json()
         validate_exists(data, ['type_id', 'state', 'license', 'make', 'model', 'year'])
-        database.query(
-            '''INSERT INTO vehicle 
-                (user_id, type_id, state, license, make, model, year)
-                VALUES (?, ?, ?, ?, ?, ?, ?)''',
-            [user_id, data['type_id'], data['state'], data['license'], data['make'], data['model'], data['year']],
-        )
+        try:
+            database.query(
+                '''INSERT INTO vehicle 
+                    (user_id, type_id, state, license, make, model, year)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                [user_id, data['type_id'], data['state'], data['license'], data['make'], data['model'], data['year']],
+            )
+        except IntegrityError as e:
+            abort(400, str(e))
+
         database.commit()
         return None, 201
