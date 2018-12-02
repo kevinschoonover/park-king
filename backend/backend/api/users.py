@@ -18,7 +18,7 @@ class UserList(Resource):
             [data['email'], data['password']],
         )
         database.commit()
-        return None, 201
+        return '', 201
 
 
 class UserSingle(Resource):
@@ -31,6 +31,18 @@ class UserSingle(Resource):
         if row is None:
             abort(404)
         return dict(row)
+
+class UserAuth(Resource):
+    def get(self):
+        validate_exists(request.args, ['email', 'password'])
+        row = database.query(
+            'SELECT * FROM user WHERE email = ? AND password = ?',
+            [request.args.get('email'), request.args.get('password')],
+            single=True,
+        )
+        if row is None:
+            abort(400, 'Authentication failed')
+        return '', 200
 
 class UserVehicles(Resource):
     def get(self, user_id):
@@ -50,7 +62,7 @@ class UserVehicles(Resource):
             [user_id, data['type_id'], data['state'], data['license'], data['make'], data['model'], data['year']],
         )
         database.commit()
-        return None, 201
+        return '', 201
 
 class UserTickets(Resource):
     def get(self,user_id):
