@@ -33,11 +33,12 @@ class UserSingle(Resource):
         return dict(row)
 
 class UserAuth(Resource):
-    def get(self):
-        validate_exists(request.args, ['email', 'password'])
+    def post(self):
+        data = request.get_json()
+        validate_exists(data, ['email', 'password'])
         row = database.query(
             'SELECT * FROM user WHERE email = ? AND password = ?',
-            [request.args.get('email'), request.args.get('password')],
+            [data['email'], data['password']],
             single=True,
         )
         if row is None:
