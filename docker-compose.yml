@@ -12,24 +12,31 @@ services:
           - '3000:3000'
         environment:
           - NODE_ENV=development
+        networks:
+          - frontend
     app:
         build:
             context: ./backend
             dockerfile: Dockerfile
-        ports:
-            - '8000:8000'
         command: "gunicorn --bind 0.0.0.0:8000 wsgi"
+        networks:
+            - web_nw
     nginx:
         image: "nginx"
-        ports:
-            - "8080:80"
         volumes:
-            - ./conf.d:/etc/nginx/conf.d
+            - ./.docker/conf.d:/etc/nginx/conf.d
+        ports:
+            - '80:80'
+            - '443:443'
         networks:
           - web_nw
+          - frontend
         depends_on:
           - app
 
+
 networks:
   web_nw:
+    driver: bridge
+  frontend:
     driver: bridge

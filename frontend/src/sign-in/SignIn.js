@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from "react-router-dom";
 
+import axios from "axios";
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -82,8 +84,11 @@ class SignIn extends React.Component {
   };
 
   onSignIn() {
-    auth.authenticate();
-    this.setState({ state: this.state });
+    axios.get(process.env.REACT_APP_API + "/users/")
+    .then((response) => console.log(response))
+    .catch((response) => console.log(response))
+    // auth.authenticate();
+    // this.setState({ state: this.state });
   }
 
   onSignUp() {
