@@ -53,7 +53,7 @@ class UserAuth(Resource):
         )
         if row is None:
             abort(400, 'Authentication failed')
-        return '', 200
+        return dict(row), 200
 
 class UserVehicles(Resource):
     def get(self, user_id):
