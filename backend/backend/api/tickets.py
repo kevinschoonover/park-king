@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError
+
 from flask import abort, make_response, request
 from flask_restful import Resource
 
@@ -5,34 +7,35 @@ from backend.util import validate_exists
 from backend import database
 
 
-class listTickets(Resource):
+class TicketList(Resource):
     def get(self):
         rows = database.query('SELECT * FROM ticket')
         return [dict(row) for row in rows],200
 
-class ticketByVehicle(Resource):
-    def get(self, vehicle_id):
-        row = database.query(
-            'SELECT * FROM tickets WHERE id = ?',
-            [vehicle_id],
+    def post(self):
+        data = request.get_json()
+        validate_exists(data, ['vehicle_id', 'lot_id', 'device_id', 'time', 'auth_token'])
+        device = database.query(
+            'SELECT auth_token FROM ticket_device WHERE id = ?',
+            [data['device_id']],
             single=True,
         )
-        if row is None:
-            abort(404)
-        return dict(row)
-    def post(self,vehicle_id):
-        data = request.get_json()
-        validate_exists(data,[device_id,lot_id,time])
+        if device['auth_token'] != data['auth_token']:
+            abort(401, 'Invalid ticket device authorization')
+
         try:
             database.query(
-                'INSERT INTO ticket (device_id,vehicle_id,lot_id,time) VALUES (?,?,?,?)',
-                [data['device'],vehicle_id,data['lot'],data['timeOfTicket']],
+                '''INSERT INTO ticket (vehicle_id, lot_id, device_id, time)
+                    VALUES (?, ?, ?, ?)
+                ''',
+                [data['vehicle_id'], data['lot_id'], data['device_id'], data['time']],
             )
-            except IntegrityError as e:
-                abort(400,str(e))
+        except IntegrityError as e:
+            abort(400, str(e))
 
+        database.commit()
         row = database.query(
-            'SELECT * FROM ticket WHERE id = last_insert_rowid()',
-            single=True
+            'SELECT * FROM ticket WHERE rowid = last_insert_rowid()',
+            single=True,
         )
         return dict(row), 201

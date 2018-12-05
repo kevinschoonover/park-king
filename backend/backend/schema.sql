@@ -129,3 +129,6 @@ INSERT INTO lot_location (lot_id, polygon_id, vertex_id, latitude, longitude) VA
 INSERT INTO lot_spaces (lot_id, stype_id, capacity) VALUES
     (1, 1, 30),
     (1, 2, 200);
+
+INSERT INTO ticket_device (id, auth_token) VALUES
+    (1, 'DEADBEEF');
