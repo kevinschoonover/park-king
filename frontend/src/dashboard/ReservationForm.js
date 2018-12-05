@@ -75,10 +75,10 @@ class ReservationForm extends React.Component {
   };
 
   handleSubmit = () => {
-    const url = process.env.REACT_APP_API + `/users/${auth.userID()}/reservations/`;
+    const url = process.env.REACT_APP_API + `/reservations/`;
     axios.post(url, {...this.state})
       .then((response) => {
-        this.onSubmit();
+        this.props.onSubmit();
       })
       .catch((error) => {
         console.log(error);

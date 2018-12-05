@@ -56,6 +56,7 @@ class Reservation extends React.Component {
           lot={reservation.lot.name}
           license={reservation.vehicle.license}
           time={reservation.start_time}
+          end={reservation.end_time}
         />
       )
     }

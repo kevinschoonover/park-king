@@ -38,11 +38,20 @@ const VehiclePaper = (props) => {
   ]
 
   let div_color = undefined;
-  if (props.color) {
-    div_color = colors[Math.floor(Math.random()*colors.length)];
-  }
 
   const time = moment(props.time)
+  const end = moment(props.end)
+
+  if (props.color) {
+    if (moment().isBefore(time)) {
+      div_color = colors[1]
+    } else if (moment().isAfter(time) && moment().isBefore(end)){
+      div_color = colors[2]
+    } else {
+      div_color = colors[0]
+    }
+  }
+
   const day = time.format("MMMM Do YYYY");
   const hour = time.format("h:mm:ss a");
 
