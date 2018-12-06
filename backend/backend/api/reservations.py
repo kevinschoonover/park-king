@@ -17,6 +17,7 @@ class ReservationList(Resource):
     def post(self):
         data = request.get_json()
         validate_exists(data, ['vehicle_id', 'lot_id', 'start_time', 'end_time'])
+        #TODO Make sure lot has available capacity
         try:
             database.query(
                 '''INSERT INTO reservation

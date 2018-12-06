@@ -8,6 +8,7 @@ from flask import g
 #DATABASE = ':memory:'
 DATABASE = '/tmp/park-king.db'
 
+
 def init_app(app):
     """
     Initializes the database and runs the ``schema.sql`` script
@@ -57,11 +58,13 @@ def query(query, parameters=(), single=False):
     cur.close()
     return result
 
+
 def commit():
     """
     Commits any changes made to the database so other connections can see it.
     """
     get_db().commit()
+
 
 def dict_factory(cursor,row):
     d = {}

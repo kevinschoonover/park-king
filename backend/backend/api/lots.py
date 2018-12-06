@@ -1,4 +1,6 @@
 import itertools
+from math import ceil
+import time
 
 from flask import abort, make_response, request
 from flask_restful import Resource
@@ -23,6 +25,7 @@ class LotSingle(Resource):
         if row is None:
             abort(404)
         return dict(row)
+
 
 class LotLocation(Resource):
     def get(self, lot_id):
@@ -49,10 +52,26 @@ class LotLocation(Resource):
 
         return result
 
-class LotCapacity(Resource):
+
+class LotBusyness(Resource):
     def get(self, lot_id):
+        start = request.args.get('start', int(time.time()), type=int)
+        duration = request.args.get('duration', 86400, type=int)
+        window = request.args.get('window', 3600, type=int)
         rows = database.query(
-            'SELECT lot_id, stype_id, capacity FROM lot_spaces WHERE lot_id = ?',
-            [lot_id],
+            '''SELECT * FROM reservation
+                WHERE ? BETWEEN start_time AND end_time
+                OR ? BETWEEN start_time AND end_time
+            ''',
+            [start, start + duration],
         )
-        return [dict(row) for row in rows]
+
+        data = [0] * ceil(duration / window)
+        for row in rows:
+            print(dict(row))
+            start = (max(row['start_time'], start) - start) // window
+            end = ceil((min(row['end_time'], start + duration) - start) / window)
+            for i in range(start, end):
+                data[i] += 1
+        
+        return data

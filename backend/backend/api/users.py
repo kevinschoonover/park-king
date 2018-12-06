@@ -67,13 +67,13 @@ class UserVehicles(Resource):
 
     def post(self, user_id):
         data = request.get_json()
-        validate_exists(data, ['type_id', 'state', 'license', 'make', 'model', 'year'])
+        validate_exists(data, ['state', 'license', 'make', 'model', 'year'])
         try:
             database.query(
                 '''INSERT INTO vehicle 
-                    (user_id, type_id, state, license, make, model, year)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                [user_id, data['type_id'], data['state'], data['license'], data['make'], data['model'], data['year']],
+                    (user_id, state, license, make, model, year)
+                    VALUES (?, ?, ?, ?, ?, ?)''',
+                [user_id, data['state'], data['license'], data['make'], data['model'], data['year']],
             )
         except IntegrityError as e:
             abort(400, str(e))
