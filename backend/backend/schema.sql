@@ -9,18 +9,18 @@ DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY,
-    email VARCHAR(80) NOT NULL UNIQUE,
-    password VARCHAR(80) NOT NULL
+    email VARCHAR(80) NOT NULL UNIQUE CHECK (email != ''),
+    password VARCHAR(80) NOT NULL CHECK (password != '')
 );
 
 CREATE TABLE vehicle (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    state CHAR(2) NOT NULL,
-    license VARCHAR(12) NOT NULL,
-    make VARCHAR(80) NOT NULL,
-    model VARCHAR(80) NOT NULL,
-    year INTEGER NOT NULL,
+    state CHAR(2) NOT NULL CHECK (length(state) = 2),
+    license VARCHAR(12) NOT NULL CHECK (license != ''),
+    make VARCHAR(80) NOT NULL CHECK (make != ''),
+    model VARCHAR(80) NOT NULL CHECK (model != ''),
+    year INTEGER NOT NULL CHECK (year > 1900),
     FOREIGN KEY (user_id) REFERENCES user,
     UNIQUE (state, license)
 );
@@ -47,7 +47,8 @@ CREATE TABLE reservation (
     start_time INTEGER NOT NULL,
     end_time INTEGER NOT NULL,
     FOREIGN KEY (vehicle_id) REFERENCES vehicle,
-    FOREIGN KEY (lot_id) REFERENCES lot
+    FOREIGN KEY (lot_id) REFERENCES lot,
+    CHECK (start_time < end_time)
 );
 
 CREATE TABLE ticket_device (

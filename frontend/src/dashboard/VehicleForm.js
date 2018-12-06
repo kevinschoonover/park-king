@@ -49,7 +49,7 @@ class VehicleForm extends React.Component {
     make: 'Tesla',
     model: 'X',
     year: '2018',
-    state: 'Texas',
+    state: 'TX',
     license: 'tesla3',
   };
 
