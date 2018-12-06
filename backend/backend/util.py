@@ -14,4 +14,4 @@ def epoch2iso(t):
 
 
 def iso2epoch(t):
-    return int(dateutil.parser.parse(t).timestamp())
+    return int(dateutil.parser.parse(t, ignoretz=True).timestamp())
