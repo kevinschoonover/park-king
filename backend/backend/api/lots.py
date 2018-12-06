@@ -61,19 +61,18 @@ class LotBusyness(Resource):
         end = start + duration
 
         rows = database.query(
-            'SELECT * FROM reservation WHERE lot_id = ?',
-            [lot_id],
+            '''SELECT * FROM reservation
+                WHERE lot_id = ?
+                AND ? <= end_time
+                AND start_time <= ?
+            ''',
+            [lot_id, start, end],
         )
 
         data = [0] * ceil(duration / window)
         for row in rows:
             row_start = row['start_time']
             row_end = row['end_time']
-            # Unfortunately this check's WHERE clause equivalent is broken:
-            # (WHERE ? BETWEEN start_time AND end_time OR ? BETWEEN start_time AND end_time)
-            if not ((row_start >= start and row_start <= end)
-                    or (row_end >= start and row_end <= end)):
-                continue
             range_start = (max(row_start, start) - start) // window
             range_end = ceil((min(row_end, end) - start) / window)
             for i in range(range_start, range_end):
