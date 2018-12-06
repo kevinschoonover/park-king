@@ -30,6 +30,19 @@ class TicketList(Resource):
         if device['auth_token'] != data['auth_token']:
             abort(401, 'Invalid ticket device authorization')
 
+        # Check if vehicle is allowed in the lot:
+        reservation = database.query(
+            '''SELECT * FROM reservation
+                WHERE vehicle_id = ?
+                AND lot_id = ?
+                AND ? BETWEEN start_time AND end_time
+            ''',
+            [data['vehicle_id'], data['lot_id'], iso2epoch(data['time'])],
+            single=True,
+        )
+        if reservation is not None:
+            abort(400, 'Vehicle has a valid reservation')
+
         try:
             database.query(
                 '''INSERT INTO ticket (vehicle_id, lot_id, device_id, time)

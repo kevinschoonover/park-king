@@ -23,8 +23,6 @@ for lot in lots:
 
 lot_id = int(input('Lot ID: '))
 
-print(datetime.now())
-
 data = {
     'vehicle_id': vehicle_id,
     'lot_id': lot_id,
@@ -34,3 +32,4 @@ data = {
 }
 
 r = requests.post('http://localhost/tickets/', json=data)
+print(r.json())
