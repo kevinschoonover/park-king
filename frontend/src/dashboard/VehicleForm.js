@@ -7,10 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Send from "@material-ui/icons/Send";
@@ -55,7 +51,6 @@ class VehicleForm extends React.Component {
     year: '2018',
     state: 'Texas',
     license: 'tesla3',
-    type_id: 1,
   };
 
   renderVehicleTypes() {
@@ -145,24 +140,6 @@ class VehicleForm extends React.Component {
                 margin="normal"
               />
             </Grid>
-            <Grid item>
-              <FormControl className={classes.formControl} margin="normal">
-                <InputLabel shrink htmlFor="lot-label">
-                  Vehicle Type
-                </InputLabel>
-                <Select
-                  value={this.state.type_id}
-                  onChange={this.handleChange('type_id')}
-                  input={<Input name="type_id" id="vehicle-type-label" />}
-                  displayEmpty
-                  name="type_id"
-                  className={classes.selectEmpty}
-                >
-                  { this.renderVehicleTypes() }
-                </Select>
-              </FormControl>
-            </Grid>
-
             <Grid item>
               <Button
                 variant="contained"

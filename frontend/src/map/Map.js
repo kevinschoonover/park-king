@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
 import axios from "axios";
+import moment from "moment";
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -63,6 +64,7 @@ class FullMap extends Component {
     zoom: 17,
     lots: [],
     show: {},
+    busyness: {},
   }
 
   handleChange = name => event => {
@@ -74,6 +76,7 @@ class FullMap extends Component {
   componentDidMount() {
     let lots = []
     let show = {};
+    let busyness = {};
 
     axios.get(url + '/lots/')
     .then((response) => {
@@ -84,7 +87,14 @@ class FullMap extends Component {
           .then((response) => {
             lot.position = response.data
             show[lot.name] = true
-            this.setState({ show, lots });
+            return axios.get(url + `/lots/${lot.id}/busyness/`)
+          })
+          .then((response) => {
+            busyness[lot.name] = response.data[moment().hour()]
+            this.setState({ show, lots, busyness });
+          })
+          .catch((error) => {
+            console.log(error)
           })
       })
     })
@@ -100,6 +110,7 @@ class FullMap extends Component {
 
     for(let i=0; i < this.state.lots.length; i++) {
       const lot = this.state.lots[i]
+      const availability = lot.capacity - this.state.busyness[lot.name]
 
       if (this.state.show[lot.name]) {
         for (let j=0; j < lot.position.length; j++) {
@@ -121,7 +132,7 @@ class FullMap extends Component {
                     </Grid>
                     <Grid item xs style={{textAlign: "right"}}>
                       <Typography variant="h6">
-                        45/50
+                        {availability}/{lot.capacity}
                       </Typography>
                     </Grid>
                   </Grid>

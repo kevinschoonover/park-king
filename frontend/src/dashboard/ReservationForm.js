@@ -14,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Send from "@material-ui/icons/Send";
 
 import { DateTimePicker } from 'material-ui-pickers';
+import { Bar } from 'react-chartjs-2';
 
 import axios from 'axios';
 import moment from 'moment';
@@ -54,13 +55,34 @@ const styles = theme => ({
   },
 });
 
+
 class ReservationForm extends React.Component {
   state = {
     start_time: moment().add(1, 'hours'),
     end_time: moment().add(2, 'hours'),
     lot_id: 1,
-    vehicle_id: 1
+    vehicle_id: 1,
+    availability: {}
   };
+
+  componentDidMount() {
+    let availability = {};
+    const url = process.env.REACT_APP_API;
+
+    this.props.lots.forEach((lot, index) => {
+      axios.get(url + `/lots/${lot.id}/busyness/`)
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i ++) {
+            response.data[i] = lot.capacity - response.data[i]
+          }
+          availability[lot.id] = response.data
+          this.setState({ availability });
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -75,8 +97,8 @@ class ReservationForm extends React.Component {
   };
 
   handleSubmit = () => {
-    const url = process.env.REACT_APP_API + `/reservations/`;
-    axios.post(url, {...this.state})
+    const url = process.env.REACT_APP_API;
+    axios.post(url + "/reservations/", {...this.state})
       .then((response) => {
         this.props.onSubmit();
       })
@@ -116,6 +138,20 @@ class ReservationForm extends React.Component {
   render() {
     const { classes } = this.props;
     const { start_time, end_time } = this.state;
+    const data = {
+      labels: [...Array(24).keys()],
+      datasets: [
+        {
+          label: 'Availability',
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+          hoverBorderColor: 'rgba(255,99,132,1)',
+          data: this.state.availability[this.state.lot_id]
+        }
+      ]
+    };
 
     return (
       <div>
@@ -125,6 +161,16 @@ class ReservationForm extends React.Component {
         </Typography>
         <form className={classes.container} noValidate autoComplete="off">
           <Grid container spacing={16} direction="column">
+            <Grid item>
+              <Bar
+                data={data}
+                height={300}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false
+                }}
+              />
+            </Grid>
             <Grid item>
               <DateTimePicker
                 value={start_time}
@@ -151,7 +197,6 @@ class ReservationForm extends React.Component {
                 <Select
                   value={this.state.lot_id}
                   onChange={this.handleChange('lot_id')}
-                  displayEmpty
                   name="lot_id"
                   className={classes.selectEmpty}
                 >
@@ -165,7 +210,6 @@ class ReservationForm extends React.Component {
                 <Select
                   value={this.state.vehicle_id}
                   onChange={this.handleChange('vehicle_id')}
-                  displayEmpty
                   name="vehicle_id"
                   className={classes.selectEmpty}
                 >
