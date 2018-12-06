@@ -68,7 +68,6 @@ class LotBusyness(Resource):
 
         data = [0] * ceil(duration / window)
         for row in rows:
-            print(dict(row))
             start = (max(row['start_time'], start) - start) // window
             end = ceil((min(row['end_time'], start + duration) - start) / window)
             for i in range(start, end):
