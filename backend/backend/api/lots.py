@@ -5,7 +5,7 @@ import time
 from flask import abort, make_response, request
 from flask_restful import Resource
 
-from backend.util import validate_exists
+from backend.util import validate_exists, iso2epoch, epoch2iso
 from backend import database
 
 
@@ -55,7 +55,7 @@ class LotLocation(Resource):
 
 class LotBusyness(Resource):
     def get(self, lot_id):
-        start = request.args.get('start', int(time.time()), type=int)
+        start = request.args.get('start', int(time.time()), type=iso2epoch)
         duration = request.args.get('duration', 86400, type=int)
         window = request.args.get('window', 3600, type=int)
         rows = database.query(

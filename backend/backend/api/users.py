@@ -86,6 +86,12 @@ class UserVehicles(Resource):
         return dict(row), 201
 
 
+def parse_ticket_row(row):
+    result = dict(row)
+    result['time'] = epoch2iso(result['time'])
+    return result
+
+
 class UserTickets(Resource):
     def get(self,user_id):
         rows = database.query(
@@ -94,7 +100,14 @@ class UserTickets(Resource):
             ''',
             [user_id],
         )
-        return [dict(row) for row in rows]
+        return [parse_ticket_row(row) for row in rows]
+
+
+def parse_reservation_row(row):
+    result = dict(row)
+    result['start_time'] = epoch2iso(result['start_time'])
+    result['end_time'] = epoch2iso(result['end_time'])
+    return result
 
 
 class UserReservations(Resource):
@@ -103,4 +116,4 @@ class UserReservations(Resource):
             'SELECT vehicle_id,lot_id,start_time,end_time  FROM reservation JOIN vehicle WHERE user_id = ?',
             [user_id],
         )
-        return [dict(row) for row in rows]
+        return [parse_reservation_row(row) for row in rows]
