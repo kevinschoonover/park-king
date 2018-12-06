@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
 import axios from "axios";
-import moment from "moment-timezone";
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';

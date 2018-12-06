@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Send from "@material-ui/icons/Send";
@@ -18,8 +17,6 @@ import { Bar } from 'react-chartjs-2';
 
 import axios from 'axios';
 import moment from 'moment';
-
-import { auth } from '../auth';
 
 
 const styles = theme => ({
