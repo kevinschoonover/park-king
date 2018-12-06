@@ -9,5 +9,6 @@ setup(
         'flask',
         'flask-cors',
         'flask_restful',
+        'python-dateutil',
     ],
 )

@@ -58,6 +58,8 @@ class LotBusyness(Resource):
         start = request.args.get('start', int(time.time()), type=iso2epoch)
         duration = request.args.get('duration', 86400, type=int)
         window = request.args.get('window', 3600, type=int)
+        end = start + duration
+
         rows = database.query(
             '''SELECT * FROM reservation
                 WHERE ? BETWEEN start_time AND end_time
@@ -68,9 +70,9 @@ class LotBusyness(Resource):
 
         data = [0] * ceil(duration / window)
         for row in rows:
-            start = (max(row['start_time'], start) - start) // window
-            end = ceil((min(row['end_time'], start + duration) - start) / window)
-            for i in range(start, end):
+            range_start = (max(row['start_time'], start) - start) // window
+            range_end = ceil((min(row['end_time'], end) - start) / window)
+            for i in range(range_start, range_end):
                 data[i] += 1
         
         return data
