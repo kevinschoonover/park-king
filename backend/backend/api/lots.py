@@ -60,7 +60,10 @@ class LotBusyness(Resource):
         window = request.args.get('window', 3600, type=int)
         end = start + duration
 
-        rows = database.query('SELECT * FROM reservation''')
+        rows = database.query(
+            'SELECT * FROM reservation WHERE lot_id = ?',
+            [lot_id],
+        )
 
         data = [0] * ceil(duration / window)
         for row in rows:
