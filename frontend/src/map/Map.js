@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
 import axios from "axios";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -90,7 +90,7 @@ class FullMap extends Component {
             return axios.get(url + `/lots/${lot.id}/busyness/`)
           })
           .then((response) => {
-            busyness[lot.name] = response.data[moment().hour()]
+            busyness[lot.name] = response.data[0]
             this.setState({ show, lots, busyness });
           })
           .catch((error) => {

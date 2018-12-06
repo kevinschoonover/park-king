@@ -146,7 +146,6 @@ class Dashboard extends React.Component {
     axios.get(url + `/users/${auth.userID()}/tickets/`)
       .then((response) => {
         tickets = response.data
-        console.log(tickets)
         tickets.forEach((ticket, index) => {
           promises.push(
             axios.get(url + `/vehicles/${ticket.vehicle_id}/`)
@@ -159,7 +158,6 @@ class Dashboard extends React.Component {
               })
           )
         });
-        console.log(promises)
 
         Promise.all(promises)
           .then((response) => {

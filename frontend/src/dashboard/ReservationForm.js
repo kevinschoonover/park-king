@@ -91,7 +91,6 @@ class ReservationForm extends React.Component {
   };
 
   handleDateChange = id => date => {
-    console.log(date.toISOString())
     this.setState({
       [id]: date
     });
