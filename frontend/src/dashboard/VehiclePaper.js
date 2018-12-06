@@ -8,7 +8,7 @@ import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import orange from '@material-ui/core/colors/orange';
 
-import moment from "moment";
+import moment from "moment-timezone";
 
 const styles = theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -52,8 +52,8 @@ const VehiclePaper = (props) => {
     }
   }
 
-  const day = time.format("MMMM Do YYYY");
-  const hour = time.format("h:mm:ss a");
+  const day = time.tz("America/Chicago").format("MMMM Do YYYY");
+  const hour = time.tz("America/Chicago").format("h:mm:ss a");
 
   return (
     <Grid item xs={12}>

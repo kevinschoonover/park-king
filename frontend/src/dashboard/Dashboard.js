@@ -141,9 +141,33 @@ class Dashboard extends React.Component {
   }
 
   updateTickets = () => {
+    let promises = []
+    let tickets = []
     axios.get(url + `/users/${auth.userID()}/tickets/`)
       .then((response) => {
-        this.setState({ tickets: response.data });
+        tickets = response.data
+        console.log(tickets)
+        tickets.forEach((ticket, index) => {
+          promises.push(
+            axios.get(url + `/vehicles/${ticket.vehicle_id}/`)
+              .then((response) => {
+                ticket.vehicle = response.data
+                return axios.get(url + `/lots/${ticket.lot_id}/`);
+              })
+              .then((response) => {
+                ticket.lot = response.data
+              })
+          )
+        });
+        console.log(promises)
+
+        Promise.all(promises)
+          .then((response) => {
+            this.setState({ tickets });
+          })
+          .catch((error) => {
+            console.log(error.response);
+          })
       })
       .catch((error) => {
          this.openSnack("Internal Server Error");

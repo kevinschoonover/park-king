@@ -91,6 +91,7 @@ class ReservationForm extends React.Component {
   };
 
   handleDateChange = id => date => {
+    console.log(date.toISOString())
     this.setState({
       [id]: date
     });
@@ -153,6 +154,18 @@ class ReservationForm extends React.Component {
       ]
     };
 
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+          yAxes: [{
+              ticks:{
+                  stepSize : 20,
+              },
+          }]
+      }
+    }
+
     return (
       <div>
         <div className={classes.appBarSpacer} />
@@ -165,10 +178,7 @@ class ReservationForm extends React.Component {
               <Bar
                 data={data}
                 height={300}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false
-                }}
+                options={options}
               />
             </Grid>
             <Grid item>
