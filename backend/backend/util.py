@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 
 import dateutil.parser
 from flask import abort
@@ -10,8 +10,8 @@ def validate_exists(d, keys):
 
 
 def epoch2iso(t):
-    return datetime.datetime.fromtimestamp(t).isoformat()
+    return datetime.fromtimestamp(t, timezone.utc).isoformat()
 
 
 def iso2epoch(t):
-    return int(dateutil.parser.parse(t, ignoretz=True).timestamp())
+    return int(dateutil.parser.parse(t).timestamp())
